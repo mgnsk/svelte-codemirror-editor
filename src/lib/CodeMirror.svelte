@@ -12,7 +12,6 @@
     import { EditorState, StateEffect, type Extension } from "@codemirror/state";
     import { indentWithTab } from "@codemirror/commands";
     import { indentUnit, type LanguageSupport } from "@codemirror/language";
-    import { debounce } from "./util";
 
     let classes = "";
     export { classes as class };
@@ -56,8 +55,6 @@
     onDestroy(() => view?.destroy());
 
     function create_editor_view(): EditorView {
-        const on_change = debounce(handle_change, 300);
-
         return new EditorView({
             parent: element,
             state: create_editor_state(value),
@@ -65,7 +62,7 @@
                 view.update([transaction]);
 
                 if (!update_from_prop && transaction.docChanged) {
-                    on_change();
+                    handle_change();
                 }
             },
         });
